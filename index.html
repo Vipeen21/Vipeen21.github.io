@@ -4,40 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vipeen Kumar, Research Scholar, Panjab University (Chd.)</title>
+    <!-- D3.js for particle simulation -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Tailwind CSS for utility classes and modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for 'Inter' -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', Arial, sans-serif; /* Prefer Inter, fallback to Arial */
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #fac47e; /* Changed background color to #fac47e */
+            color: #333; /* Dark text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scrollbars */
         }
         header {
             background-color: #333;
             color: white;
             padding: 20px;
             font-size: 24px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         nav {
             background: #444;
             padding: 10px;
+            border-radius: 8px;
+            margin: 10px auto;
+            max-width: 800px; /* Limit nav width */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         nav a {
             color: white;
             padding: 10px 20px;
             text-decoration: none;
             font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: bold; /* Made navigation links bold */
         }
         nav a:hover {
             background: #666;
         }
         .content {
             display: none;
-            margin: 20px;
+            margin: 20px auto; /* Center content sections */
+            max-width: 1200px; /* Overall max-width for the content area */
             padding: 20px;
-            background: white;
+            background: transparent; /* Changed to transparent to match body background */
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: none; /* Removed box-shadow to blend with body */
         }
         .active {
             display: block;
@@ -46,13 +65,101 @@
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            margin-top: 10px;
+            object-fit: cover; /* Ensure image covers the area */
+            border: 3px solid #333; /* Add a border */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            margin: 0 auto; /* Center image within its column */
         }
         footer {
-            margin-top: 20px;
-            padding: 10px;
+            margin-top: 30px; /* More space from content */
+            padding: 15px;
             background: #333;
             color: white;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Particle Visualization Specific Styles */
+        canvas {
+            border-radius: 8px; /* Slightly smaller radius for individual canvases */
+            box-shadow: none; /* Removed box-shadow */
+            background-color: transparent; /* Changed to transparent */
+            cursor: pointer;
+            width: 100%; /* Take full width of its parent (.right-column-canvas-wrapper) */
+            height: 100px; /* Fixed height for each individual word canvas */
+            display: block; /* Ensure it takes full width */
+        }
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        /* New Flexbox Layout for Home Section */
+        .home-content-wrapper {
+            display: flex;
+            flex-direction: column; /* Default to column on small screens */
+            gap: 20px;
+            align-items: center; /* Center items in column layout */
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) { /* On medium screens and up, switch to row */
+            .home-content-wrapper {
+                flex-direction: row;
+                justify-content: center; /* Center the two columns */
+                align-items: flex-start; /* Align items to the top of the row */
+                text-align: left; /* Reset text alignment for columns */
+            }
+            .left-column {
+                flex: 0 0 40%; /* Left column takes 40% of the width */
+                max-width: 40%; /* Ensure it doesn't grow beyond 40% */
+                padding: 10px; /* Add some padding */
+            }
+            .left-column p, .left-column strong {
+                text-align: left; /* Ensure text is left-aligned within the column */
+            }
+            .left-column .bio-img {
+                margin-left: 0; /* Align image to left within its column */
+                margin-right: auto;
+            }
+
+            .right-column {
+                flex: 0 0 60%; /* Right column takes 60% of the width */
+                max-width: 60%; /* Ensure it doesn't grow beyond 60% */
+                padding: 10px; /* Add some padding */
+                display: flex; /* Make right column a flex container */
+                flex-direction: column; /* Stack items vertically */
+                justify-content: space-around; /* Distribute space evenly */
+                align-items: center; /* Center canvases horizontally within right column */
+                min-height: 4 * 100px + 3 * 20px; /* Min height for 4 canvases + 3 gaps (approx) */
+            }
+            .right-column-canvas-wrapper {
+                width: 100%; /* Each wrapper takes full width of right-column */
+                max-width: 600px; /* Max width for each canvas wrapper to ensure word fits */
+                margin-bottom: 20px; /* Spacing between canvases */
+            }
+            .right-column-canvas-wrapper:last-child {
+                margin-bottom: 0; /* No margin after the last one */
+            }
+        }
+
+        /* New style for the heading */
+        .mocha-mousse-heading {
+            color: #7B5E57; /* Mocha Mousse color */
+            font-weight: bold;
+            font-size: 30px; /* Increased font size for the heading */
         }
     </style>
     <script>
@@ -65,7 +172,7 @@
 </head>
 <body>
     <header>
-       Vipeen Kumar, Research Scholar, Panjab University (Chd.)
+        Vipeen Kumar, Research Scholar, Panjab University (Chd.)
     </header>
     <nav>
         <a href="#" onclick="showSection('home')">Home</a>
@@ -75,11 +182,33 @@
     </nav>
     
     <section id="home" class="content active">
-        <h2>Welcome to My Research Page</h2>
-        <img src="WhatsApp Image 2025-03-27 at 02.40.35.jpeg" alt="Vipeen Kumar" class="bio-img">
-        <p><strong>Vipeen Kumar</strong></p>
-        <p>Research Scholar at Panjab University (Chandigarh)</p>
-        <p>My research focuses on the impact of exchange rate volatility on capital formation, using econometric techniques to analyze economic trends and financial stability.</p>
+        <h2 class="mocha-mousse-heading">Welcome to My Research Page</h2>
+        
+        <div class="home-content-wrapper">
+            <!-- Left Column: Image and Bio Text (40%) -->
+            <div class="left-column">
+                <img src="https://placehold.co/150x150/cccccc/333333?text=Vipeen+Kumar" alt="Vipeen Kumar" class="bio-img">
+                <p class="mt-4"><strong>Vipeen Kumar</strong></p>
+                <p>Research Scholar at Panjab University (Chandigarh)</p>
+                <p>My research focuses on the impact of exchange rate volatility on capital formation, using econometric techniques to analyze economic trends and financial stability.</p>
+            </div>
+
+            <!-- Right Column: Multiple Particle Visualizations (60%) -->
+            <div class="right-column">
+                <div class="right-column-canvas-wrapper">
+                    <canvas id="economicsCanvas"></canvas>
+                </div>
+                <div class="right-column-canvas-wrapper">
+                    <canvas id="econometricsCanvas"></canvas>
+                </div>
+                <div class="right-column-canvas-wrapper">
+                    <canvas id="machineLearningCanvas"></canvas>
+                </div>
+                <div class="right-column-canvas-wrapper">
+                    <canvas id="financeCanvas"></canvas>
+                </div>
+            </div>
+        </div>
     </section>
     
     <section id="courses" class="content">
@@ -95,15 +224,183 @@
     <section id="code" class="content">
         <h2>Code Repository</h2>
         <ul>
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/exrv/refs/heads/main/final%20excrf.py" target="_blank">View Python Code for exchange rate and capital formation</a></li>
-        </ul>
-        <ul>
-            <li><a href= "https://raw.githubusercontent.com/Vipeen21/machine-learning-projects/refs/heads/main/credit_score_model.py" target="_blank">View Python Code for XGboost credit score model</a></li>
+            <li><a href="https://raw.githubusercontent.com/Vipeen21/exrv/refs/heads/main/final%20excrf.py" target="_blank" class="text-blue-600 hover:underline">View Python Code for exchange rate and capital formation</a></li>
+            <li><a href="https://raw.githubusercontent.com/Vipeen21/machine-learning-projects/refs/heads/main/credit_score_model.py" target="_blank" class="text-blue-600 hover:underline">View Python Code for XGboost credit score model</a></li>
         </ul>
     </section>
     
     <footer>
         &copy; 2025 Vipeen Kumar | GitHub Page
     </footer>
+
+    <!-- Message Box for notifications -->
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        // Function to show a custom message box
+        function showMessageBox(message, duration = 3000) {
+            const msgBox = document.getElementById('messageBox');
+            msgBox.textContent = message;
+            msgBox.style.display = 'block';
+            setTimeout(() => {
+                msgBox.style.display = 'none';
+            }, duration);
+        }
+
+        // Global object to store references to each particle effect's simulation and state
+        const particleEffects = {};
+
+        // Function to generate particles from text onto a given canvas context
+        function generateParticlesFromText(text, fontSize, density, targetCanvas) {
+            const offscreenCanvas = document.createElement('canvas');
+            offscreenCanvas.width = targetCanvas.width;
+            offscreenCanvas.height = targetCanvas.height;
+            const offscreenCtx = offscreenCanvas.getContext('2d');
+
+            offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+            offscreenCtx.font = `${fontSize}px 'Inter', sans-serif`;
+            offscreenCtx.textAlign = 'center';
+            offscreenCtx.textBaseline = 'middle';
+            offscreenCtx.fillStyle = 'black';
+            offscreenCtx.fillText(text, offscreenCanvas.width / 2, offscreenCanvas.height / 2);
+
+            const imageData = offscreenCtx.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+            const newParticles = [];
+            const step = Math.max(1, Math.floor(10 / density));
+
+            for (let y = 0; y < offscreenCanvas.height; y += step) {
+                for (let x = 0; x < offscreenCanvas.width; x += step) {
+                    const i = (y * offscreenCanvas.width + x) * 4;
+                    if (imageData.data[i + 3] > 0) {
+                        newParticles.push({
+                            id: newParticles.length,
+                            x: Math.random() * targetCanvas.width,
+                            y: Math.random() * targetCanvas.height,
+                            targetX: x,
+                            targetY: y,
+                            vx: 0,
+                            vy: 0
+                        });
+                    }
+                }
+            }
+            return newParticles;
+        }
+
+        // Function to set up and manage a single particle effect
+        function setupParticleEffect(canvasId, text, fontSize, particleDensity, hoverRepulsionStrength) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions based on its parent container's rendered size
+            const parentWrapper = canvas.parentElement;
+            canvas.width = parentWrapper.offsetWidth;
+            canvas.height = parentWrapper.offsetHeight;
+
+            // Ensure minimum dimensions to prevent getImageData error if canvas is tiny
+            canvas.width = Math.max(1, canvas.width);
+            canvas.height = Math.max(1, canvas.height);
+
+            let nodes = generateParticlesFromText(text, fontSize, particleDensity, canvas);
+            const particleColor = "#1a73e8"; // Particle color set to bright blue
+
+            let mouse = { x: null, y: null, active: false }; // Mouse state specific to this canvas
+
+            function mouseForce(alpha) {
+                if (!mouse.active || mouse.x === null || mouse.y === null) return;
+
+                const radius = 100; // Radius of influence around the cursor
+                const strength = hoverRepulsionStrength; // Strength of repulsion
+
+                for (const node of nodes) {
+                    const dx = node.x - mouse.x;
+                    const dy = node.y - mouse.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < radius) {
+                        const pushFactor = (1 - distance / radius) * strength * alpha;
+                        node.vx += dx / distance * pushFactor;
+                        node.vy += dy / distance * pushFactor;
+                    }
+                }
+            }
+
+            // Stop any existing simulation for this canvas before creating a new one
+            if (particleEffects[canvasId] && particleEffects[canvasId].simulation) {
+                particleEffects[canvasId].simulation.stop();
+            }
+
+            const simulation = d3.forceSimulation(nodes)
+                .force("charge", d3.forceManyBody().strength(-0.5))
+                .force("x", d3.forceX(d => d.targetX).strength(0.2)) /* Increased strength for faster re-settling */
+                .force("y", d3.forceY(d => d.targetY).strength(0.2)) /* Increased strength for faster re-settling */
+                .force("collide", d3.forceCollide().radius(2))
+                .force("mouse", mouseForce)
+                .on("tick", () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (const d of nodes) {
+                        ctx.fillStyle = particleColor; // Set particle color to blue
+                        ctx.beginPath();
+                        ctx.arc(d.x, d.y, 2, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+                });
+
+            // Event listeners for this specific canvas
+            canvas.addEventListener('mousemove', function(event) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = event.clientX - rect.left;
+                mouse.y = event.clientY - rect.top;
+                mouse.active = true;
+                simulation.alpha(0.3).restart();
+            });
+
+            canvas.addEventListener('mouseleave', function() {
+                mouse.active = false;
+                mouse.x = null;
+                mouse.y = null;
+                simulation.alpha(0.1).restart();
+            });
+
+            // Store the simulation and nodes for potential future updates (e.g., resize)
+            particleEffects[canvasId] = { simulation, nodes, canvas, ctx, text, fontSize, particleDensity, hoverRepulsionStrength, mouse };
+        }
+
+        // Main animation loop that ticks all active simulations
+        function animateAllSimulations() {
+            for (const id in particleEffects) {
+                if (particleEffects[id].simulation) {
+                    particleEffects[id].simulation.tick();
+                }
+            }
+            requestAnimationFrame(animateAllSimulations);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial setup for each particle effect
+            document.fonts.ready.then(() => {
+                // Use a small timeout to ensure canvas dimensions are computed after layout
+                setTimeout(() => {
+                    setupParticleEffect('economicsCanvas', "economics", 50, 3, 20); // Font size decreased to 50
+                    setupParticleEffect('econometricsCanvas', "econometrics", 60, 3, 20);
+                    setupParticleEffect('machineLearningCanvas', "machine learning", 55, 3, 20);
+                    setupParticleEffect('financeCanvas', "finance", 50, 3, 20); // Font size decreased to 50
+
+                    // Start the single animation loop for all simulations
+                    animateAllSimulations();
+                    showMessageBox("Hover over the words to see the effect!", 3000);
+                }, 100); // 100ms delay
+            });
+
+            // Handle window resizing for all effects
+            window.addEventListener('resize', () => {
+                // Re-setup each effect to adjust canvas dimensions and restart simulation
+                for (const id in particleEffects) {
+                    const effect = particleEffects[id];
+                    setupParticleEffect(effect.canvas.id, effect.text, effect.fontSize, effect.particleDensity, effect.hoverRepulsionStrength);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
