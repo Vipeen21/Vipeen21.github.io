@@ -103,8 +103,8 @@
         }
         
         .bio-img {
-            width: 150px;
-            height: 150px;
+            width: 200px; /* Increased image width */
+            height: 200px; /* Increased image height */
             border-radius: 50%;
             object-fit: cover; /* Ensure image covers the area */
             border: 3px solid #333; /* Add a border */
@@ -160,6 +160,12 @@
             align-items: center; /* Center items in column layout */
             margin-top: 20px;
             flex-grow: 1; /* Allow this content to grow and push footer down */
+        }
+        .left-column p { /* Increased font size for paragraphs in left column */
+            font-size: 1.1em; /* Adjust as needed, e.g., 1.1em, 16px, etc. */
+        }
+        .left-column p strong { /* Ensure strong text also gets increased font size */
+            font-size: 1.2em; /* Slightly larger for the name */
         }
         .other-content-wrapper { /* New wrapper for other sections' content */
             flex-grow: 1; /* Allow this content to grow and push footer down */
@@ -428,6 +434,10 @@
             sections.forEach(section => {
                 sectionObserver.observe(section);
             });
+
+            // Set initial active link on load for the first section
+            // This is handled by the IntersectionObserver when the page loads and the first section becomes visible
+            // No explicit call needed here, as the observer will fire for the initial visible section.
         });
     </script>
 </head>
@@ -449,7 +459,7 @@
             <div class="home-content-wrapper">
                 <!-- Left Column: Image and Bio Text (40%) -->
                 <div class="left-column">
-                    <img src="WhatsApp Image 2025-03-27 at 02.40.35.jpeg" alt="Vipeen Kumar" class="bio-img">
+                    <img src="WhatsApp Image 2025-03-27 at 02.40.35.jpeg" alt="Vipeen Kumar" class="bio-img" onerror="this.onerror=null;this.src='https://placehold.co/150x150/cccccc/333333?text=Vipeen+Kumar';">
                     <p class="mt-4"><strong>Vipeen Kumar</strong></p>
                     <p>Research Scholar at Panjab University (Chandigarh)</p>
                     <p>My research focuses on the impact of exchange rate volatility on capital formation, using econometric techniques to analyze economic trends and financial stability.</p>
