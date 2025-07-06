@@ -89,12 +89,17 @@
             flex-direction: column; /* Stack children vertically */
             justify-content: space-between; /* Push content and footer to the bottom */
             box-sizing: border-box; /* Include padding in height */
-            padding-top: 130px; /* Space for fixed header and nav within each section */
+            padding-top: 20px; /* Default reduced padding-top for all content */
             
             /* Animation initial state */
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Specific padding-top for the home section */
+        #home.content {
+            padding-top: 130px; /* Set padding-top for home section to 130px */
         }
 
         .content.animate-in {
@@ -174,6 +179,7 @@
             align-items: center; /* Center content within these sections */
             justify-content: center; /* Center content vertically in other tabs */
             width: 100%; /* Take full width */
+            text-align: center; /* Added to center text content */
         }
 
 
