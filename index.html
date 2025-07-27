@@ -398,10 +398,10 @@
             });
 
             // Handle window resizing for all effects
-          //  window.addEventListener('resize', () => {
-            //    for (const id in particleEffects) {
-              //      const effect = particleEffects[id];
-                //    setupParticleEffect(effect.canvas.id, effect.text, effect.fontSize, effect.particleDensity, effect.hoverRepulsionStrength);
+            window.addEventListener('resize', () => {
+                for (const id in particleEffects) {
+                    const effect = particleEffects[id];
+                    setupParticleEffect(effect.canvas.id, effect.text, effect.fontSize, effect.particleDensity, effect.hoverRepulsionStrength);
                 }
             });
         };
