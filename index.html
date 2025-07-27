@@ -13,7 +13,7 @@
     <style>
         html, body {
             height: 100%; /* Make html and body take full viewport height */
-            margin: 0;
+            margin: 0;z
             padding: 0;
             overflow: hidden; /* Prevent body scrollbar, scroll-container will handle scrolling */
             font-family: 'Inter', Arial, sans-serif; /* Prefer Inter, fallback to Arial */
@@ -398,10 +398,10 @@
             });
 
             // Handle window resizing for all effects
-            window.addEventListener('resize', () => {
-                for (const id in particleEffects) {
-                    const effect = particleEffects[id];
-                    setupParticleEffect(effect.canvas.id, effect.text, effect.fontSize, effect.particleDensity, effect.hoverRepulsionStrength);
+          //  window.addEventListener('resize', () => {
+            //    for (const id in particleEffects) {
+              //      const effect = particleEffects[id];
+                //    setupParticleEffect(effect.canvas.id, effect.text, effect.fontSize, effect.particleDensity, effect.hoverRepulsionStrength);
                 }
             });
         };
