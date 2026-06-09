@@ -3,181 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayesian Statistics Course Documentation</title>
+    <title>Bayesian Statistics using Python | Vipeen Kumar</title>
     
-    <!-- Clean, modern layout styling for sidebar navigation and typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
-        :root {
-            --sidebar-width: 260px;
-            --bg-color: #ffffff;
-            --text-color: #24292e;
-            --link-color: #0366d6;
+        body { 
+            background-color: #fac47e; 
+            font-family: 'Inter', Arial, sans-serif; 
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-        }
-        /* Sidebar Navigation Layout */
-        #sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            background-color: #f6f8fa;
-            border-right: 1px solid #e1e4e8;
-            position: fixed;
-            overflow-y: auto;
-            padding: 20px 0;
-            box-sizing: border-box;
-        }
-        #sidebar h3 {
-            padding: 0 20px;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-        #sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        #sidebar li a {
-            display: block;
-            padding: 10px 20px;
-            color: #586069;
-            text-decoration: none;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        #sidebar li a:hover, #sidebar li.active a {
-            background-color: #e1e4e8;
-            color: #000000;
-            font-weight: 600;
-        }
-        /* Main Document Viewport */
-        #main-content {
-            margin-left: var(--sidebar-width);
-            padding: 40px;
-            max-width: 800px;
-            width: calc(100% - var(--sidebar-width));
-            box-sizing: border-box;
-        }
-        /* Markdown Document Elements Styling */
-        pre { background-color: #f6f8fa; padding: 16px; border-radius: 6px; overflow: auto; }
-        code { background-color: rgba(27,31,35,0.05); padding: 0.2em 0.4em; border-radius: 3px; font-family: monospace; }
-        pre code { background-color: transparent; padding: 0; }
-        blockquote { margin: 0; padding-left: 1em; color: #6a737d; border-left: 0.25em solid #dfe2e5; }
-        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
-        th, td { padding: 6px 13px; border: 1px solid #dfe2e5; }
-        tr:nth-child(even) { background-color: #f6f8fa; }
+        /* Calculate height to stay within screen, leaving room for the header */
+        .scroll-area { height: calc(100vh - 70px); }
     </style>
-
-    <!-- Markdown Parser Component -->
-    <script src="https://jsdelivr.net"></script>
-
-    <!-- Math Equation Components (KaTeX) -->
-    <link rel="stylesheet" href="https://jsdelivr.net">
-    <script src="https://jsdelivr.net"></script>
-    <script src="https://jsdelivr.net"></script>
 </head>
-<body>
+<body class="m-0 p-0 overflow-hidden text-gray-800 flex flex-col h-screen">
 
-    <!-- Sidebar Menu Element -->
-    <nav id="sidebar">
-        <h3>📖 Course Index</h3>
-        <ul id="menu-list"></ul>
-    </nav>
+    <header class="bg-[#333] text-white p-5 text-xl shadow-md h-[70px] box-border w-full z-50 flex justify-between items-center rounded-b-lg flex-shrink-0">
+        <span class="font-bold">Bayesian Statistics using Python</span>
+        <a href="index.html" class="text-sm bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded transition">Back to Home</a>
+    </header>
 
-    <!-- Core Content Target Area -->
-    <main id="main-content">
-        <div id="content">Select a chapter from the sidebar menu to begin reading.</div>
-    </main>
+    <div class="flex flex-1 overflow-hidden">
+        <nav class="w-1/4 min-w-[250px] bg-[#fac47e] p-6 overflow-y-auto scroll-area border-r border-gray-700/20">
+            <h2 class="text-xl font-bold mb-4 text-[#7B5E57]">Chapters</h2>
+            <ul id="nav-links" class="space-y-2 font-semibold text-sm">
+                </ul>
+        </nav>
+
+        <main class="w-3/4 p-10 overflow-y-auto scroll-area bg-white rounded-tl-xl shadow-inner">
+            <article id="content" class="prose prose-lg max-w-none prose-h1:text-[#7B5E57] prose-a:text-blue-600">
+                <h2 class="animate-pulse text-gray-500">Loading course content...</h2>
+            </article>
+        </main>
+    </div>
 
     <script>
-        // Dictionary mapping human-readable titles to raw GitHub file paths
-        const markdownFiles = {
-            "Introduction": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Introduction",
-               "Index": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Contents",
-            "Chapter 1: Bayes’ Theorem & Probability Foundations": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%201%3A%20Bayes%E2%80%99%20Theorem%20%26%20Probability%20Foundations.md",
-              "Chapter 2: The Great Debate: Frequentist vs. Bayesian Statistics": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%202",
-               "Chapter 3: Conjugate Priors & Posterior Distributions": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%203",
-               "Chapter 4: Bayesian Estimators and Credible Intervals": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%204",
-               "Chapter 5: Loss Functions and Decision Theory": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%205",
-               "Chapter 6: Bayesian Hypothesis Testing & Model Comparison": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%206",
-               "Chapter 7: Markov Chain Monte Carlo (MCMC) – Part I": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%207",
-               "Chapter 8: MCMC – Part II (Advanced Topics)": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%208",
-               "Chapter 9: Variational Inference": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%209",
-               "Chapter 10: Bayesian Linear and Logistic Regression": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2010",
-               "Chapter 11: Hierarchical (Multilevel) Bayesian Models": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2011",
-               "Chapter 12: Model Diagnostics and Posterior Predictive Checks": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2012",
-               "Chapter 13: Bayesian Model Averaging": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2013",
-               "Chapter 14: Prior Elicitation and Sensitivity Analysis": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2014",
-               "Chapter 15: Applications – Econometrics, Finance, and Machine Learning":"https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2015"
-       
-   
+        // Base URL for your raw GitHub files
+        const repoBase = "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/main/";
 
-        };
+        // Array mapping display titles to exact URL-encoded file names in your repository
+        const chapters = [
+            { title: "Introduction", file: "Introduction.md" },
+            { title: "Table of Contents", file: "Contents.md" },
+            { title: "Chapter 1: Bayes' Theorem & Foundations", file: "Chapter%201%3A%20Bayes%E2%80%99%20Theorem%20%26%20Probability%20Foundations.md" },
+            { title: "Chapter 2: Frequentist vs. Bayesian", file: "Chapter%202%3A%20The%20Great%20Debate%3A%20Frequentist%20vs.%20Bayesian%20Statistics.md" },
+            { title: "Chapter 3: Conjugate Priors", file: "Chapter%203%3A%20Conjugate%20Priors%20%26%20Posterior%20Distributions.md" },
+            { title: "Chapter 4: Bayesian Estimators", file: "Chapter%204%3A%20Bayesian%20Estimators%20and%20Credible%20Intervals.md" },
+            { title: "Chapter 5: Loss Functions", file: "Chapter%205%3A%20Loss%20Functions%20and%20Decision%20Theory.md" },
+            { title: "Chapter 6: Hypothesis Testing", file: "Chapter%206%3A%20Bayesian%20Hypothesis%20Testing%20%26%20Model%20Comparison.md" },
+            { title: "Chapter 7: MCMC – Part I", file: "Chapter%207%3A%20Markov%20Chain%20Monte%20Carlo%20(MCMC)%20%E2%80%93%20Part%20I.md" },
+            { title: "Chapter 8: MCMC – Part II", file: "Chapter%208%3A%20MCMC%20%E2%80%93%20Part%20II%20(Advanced%20Topics).md" },
+            { title: "Chapter 9: Variational Inference", file: "Chapter%209%3A%20Variational%20Inference.md" },
+            { title: "Chapter 10: Linear & Logistic Regression", file: "Chapter%2010%3A%20Bayesian%20Linear%20and%20Logistic%20Regression.md" },
+            { title: "Chapter 11: Hierarchical Models", file: "Chapter%2011%3A%20Hierarchical%20(Multilevel)%20Bayesian%20Models.md" },
+            { title: "Chapter 12: Model Diagnostics", file: "Chapter%2012%3A%20Model%20Diagnostics%20and%20Posterior%20Predictive%20Checks.md" },
+            { title: "Chapter 13: Bayesian Model Averaging", file: "Chapter%2013%3A%20Bayesian%20Model%20Averaging.md" },
+            { title: "Chapter 14: Prior Elicitation", file: "Chapter%2014%3A%20Prior%20Elicitation%20and%20Sensitivity%20Analysis.md" },
+            { title: "Chapter 15: Applications", file: "Chapter%2015%3A%20Applications%20%E2%80%93%20Econometrics%2C%20Finance%2C%20and%20Machine%20Learning.md" }
+        ];
 
-        const menuList = document.getElementById("menu-list");
-        const contentDiv = document.getElementById("content");
+        const navLinks = document.getElementById('nav-links');
+        const contentDiv = document.getElementById('content');
 
-        // Dynamically build the sidebar anchor elements from database configuration object
-        function buildNavigationMenu() {
-            Object.keys(markdownFiles).forEach((title, index) => {
-                const li = document.createElement("li");
-                const a = document.createElement("a");
-                a.textContent = title;
-                a.onclick = () => loadAndDisplayDocument(title, li);
-                li.appendChild(a);
-                menuList.appendChild(li);
+        // 1. Build the Sidebar Navigation
+        chapters.forEach((chapter, index) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = "#";
+            a.className = "text-[#333] hover:text-[#7B5E57] hover:bg-white/50 block p-2 rounded transition duration-200";
+            a.textContent = chapter.title;
 
-                // Auto-load the first available document on initial viewport entry
-                if (index === 0) {
-                    loadAndDisplayDocument(title, li);
-                }
-            });
-        }
+            // When a chapter is clicked, fetch and render its content
+            a.onclick = (e) => {
+                e.preventDefault();
+                
+                // Visual highlight for the active link
+                document.querySelectorAll('#nav-links a').forEach(link => link.classList.remove('bg-white', 'shadow-sm', 'text-[#7B5E57]'));
+                a.classList.add('bg-white', 'shadow-sm', 'text-[#7B5E57]');
 
-        // Network Fetch and Client Assembly Engine 
-        async function loadAndDisplayDocument(title, targetListItem) {
-            // Manage visual menu highlighting
-            document.querySelectorAll("#sidebar li").forEach(item => item.classList.remove("active"));
-            targetListItem.classList.add("active");
+                loadMarkdown(repoBase + chapter.file);
+            };
+            li.appendChild(a);
+            navLinks.appendChild(li);
+        });
 
-            contentDiv.innerHTML = "<p>Fetching document contents...</p>";
-            const targetUrl = markdownFiles[title];
-
+        // 2. Fetch and Render Markdown function
+        async function loadMarkdown(url) {
+            // Scroll to top of content area on new load
+            contentDiv.parentElement.scrollTop = 0; 
+            contentDiv.innerHTML = '<h2 class="animate-pulse text-gray-500 mt-10 text-center">Fetching chapter content...</h2>';
+            
             try {
-                const response = await fetch(targetUrl);
-                if (!response.ok) throw new Error("Could not retrieve source file code formatting definitions.");
-                const rawMarkdown = await response.text();
+                // Fetch the raw markdown from GitHub
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Failed to fetch markdown file from GitHub.");
+                const markdown = await response.text();
 
-                // Build HTML Layout node fragments
-                contentDiv.innerHTML = marked.parse(rawMarkdown);
+                // Convert Markdown to HTML
+                contentDiv.innerHTML = marked.parse(markdown);
 
-                // Compute rendering routines for math formulas
-                renderMathInElement(contentDiv, {
-                    delimiters: [
-                        {left: "$$", right: "$$", display: true},
-                        {left: "$", right: "$", display: false}
-                    ],
-                    throwOnError: false
-                });
-
-                // Smooth scroll back to topmost viewport frame boundary upon load
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Command MathJax to render the newly injected LaTeX equations
+                if (window.MathJax) {
+                    MathJax.typesetPromise([contentDiv]).catch((err) => console.log('MathJax error: ', err));
+                }
 
             } catch (error) {
-                contentDiv.innerHTML = `<p style="color:red;">Error rendering content: ${error.message}</p>`;
+                contentDiv.innerHTML = `<h2 class="text-red-600">Error loading content: ${error.message}</h2>`;
             }
         }
 
-        // Initialize execution sequence
-        buildNavigationMenu();
+        // 3. Automatically load the first chapter on initialization
+        if(chapters.length > 0) {
+            navLinks.querySelector('a').click();
+        }
     </script>
 </body>
 </html>
-
-
-           
