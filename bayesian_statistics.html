@@ -1,22 +1,183 @@
-<h1 id="title" style="font-size: 20px;"> Bayesian Statistics using Python</h1>
-       
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayesian Statistics Course Documentation</title>
+    
+    <!-- Clean, modern layout styling for sidebar navigation and typography -->
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --bg-color: #ffffff;
+            --text-color: #24292e;
+            --link-color: #0366d6;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+        /* Sidebar Navigation Layout */
+        #sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background-color: #f6f8fa;
+            border-right: 1px solid #e1e4e8;
+            position: fixed;
+            overflow-y: auto;
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+        #sidebar h3 {
+            padding: 0 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #sidebar li a {
+            display: block;
+            padding: 10px 20px;
+            color: #586069;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        #sidebar li a:hover, #sidebar li.active a {
+            background-color: #e1e4e8;
+            color: #000000;
+            font-weight: 600;
+        }
+        /* Main Document Viewport */
+        #main-content {
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+            max-width: 800px;
+            width: calc(100% - var(--sidebar-width));
+            box-sizing: border-box;
+        }
+        /* Markdown Document Elements Styling */
+        pre { background-color: #f6f8fa; padding: 16px; border-radius: 6px; overflow: auto; }
+        code { background-color: rgba(27,31,35,0.05); padding: 0.2em 0.4em; border-radius: 3px; font-family: monospace; }
+        pre code { background-color: transparent; padding: 0; }
+        blockquote { margin: 0; padding-left: 1em; color: #6a737d; border-left: 0.25em solid #dfe2e5; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { padding: 6px 13px; border: 1px solid #dfe2e5; }
+        tr:nth-child(even) { background-color: #f6f8fa; }
+    </style>
 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Introduction">Introduction</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Contents">Index</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%201%3A%20Bayes%E2%80%99%20Theorem%20%26%20Probability%20Foundations.md">Chapter 1: Bayes’ Theorem & Probability Foundations</a></li>
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%202">Chapter 2: The Great Debate: Frequentist vs. Bayesian Statistics</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%203">Chapter 3: Conjugate Priors & Posterior Distributions</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%204">Chapter 4: Bayesian Estimators and Credible Intervals</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%205">Chapter 5: Loss Functions and Decision Theory</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%206">Chapter 6: Bayesian Hypothesis Testing & Model Comparison</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%207">Chapter 7: Markov Chain Monte Carlo (MCMC) – Part I</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%208">Chapter 8: MCMC – Part II (Advanced Topics)</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%209">Chapter 9: Variational Inference</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2010">Chapter 10: Bayesian Linear and Logistic Regression</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2011">Chapter 11: Hierarchical (Multilevel) Bayesian Models</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2012">Chapter 12: Model Diagnostics and Posterior Predictive Checks</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2013">Chapter 13: Bayesian Model Averaging</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2014">Chapter 14: Prior Elicitation and Sensitivity Analysis</a></li> 
-            <li><a href="https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2015">Chapter 15: Applications – Econometrics, Finance, and Machine Learning</a></li> 
+    <!-- Markdown Parser Component -->
+    <script src="https://jsdelivr.net"></script>
+
+    <!-- Math Equation Components (KaTeX) -->
+    <link rel="stylesheet" href="https://jsdelivr.net">
+    <script src="https://jsdelivr.net"></script>
+    <script src="https://jsdelivr.net"></script>
+</head>
+<body>
+
+    <!-- Sidebar Menu Element -->
+    <nav id="sidebar">
+        <h3>📖 Course Index</h3>
+        <ul id="menu-list"></ul>
+    </nav>
+
+    <!-- Core Content Target Area -->
+    <main id="main-content">
+        <div id="content">Select a chapter from the sidebar menu to begin reading.</div>
+    </main>
+
+    <script>
+        // Dictionary mapping human-readable titles to raw GitHub file paths
+        const markdownFiles = {
+            "Introduction": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Introduction",
+               "Index": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Contents",
+            "Chapter 1: Bayes’ Theorem & Probability Foundations": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%201%3A%20Bayes%E2%80%99%20Theorem%20%26%20Probability%20Foundations.md",
+              "Chapter 2: The Great Debate: Frequentist vs. Bayesian Statistics": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%202",
+               "Chapter 3: Conjugate Priors & Posterior Distributions": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%203",
+               "Chapter 4: Bayesian Estimators and Credible Intervals": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%204",
+               "Chapter 5: Loss Functions and Decision Theory": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%205",
+               "Chapter 6: Bayesian Hypothesis Testing & Model Comparison": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%206",
+               "Chapter 7: Markov Chain Monte Carlo (MCMC) – Part I": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%207",
+               "Chapter 8: MCMC – Part II (Advanced Topics)": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%208",
+               "Chapter 9: Variational Inference": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%209",
+               "Chapter 10: Bayesian Linear and Logistic Regression": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2010",
+               "Chapter 11: Hierarchical (Multilevel) Bayesian Models": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2011",
+               "Chapter 12: Model Diagnostics and Posterior Predictive Checks": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2012",
+               "Chapter 13: Bayesian Model Averaging": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2013",
+               "Chapter 14: Prior Elicitation and Sensitivity Analysis": "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2014",
+               "Chapter 15: Applications – Econometrics, Finance, and Machine Learning":"https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/refs/heads/main/Chapter%2015"
        
    
+
+        };
+
+        const menuList = document.getElementById("menu-list");
+        const contentDiv = document.getElementById("content");
+
+        // Dynamically build the sidebar anchor elements from database configuration object
+        function buildNavigationMenu() {
+            Object.keys(markdownFiles).forEach((title, index) => {
+                const li = document.createElement("li");
+                const a = document.createElement("a");
+                a.textContent = title;
+                a.onclick = () => loadAndDisplayDocument(title, li);
+                li.appendChild(a);
+                menuList.appendChild(li);
+
+                // Auto-load the first available document on initial viewport entry
+                if (index === 0) {
+                    loadAndDisplayDocument(title, li);
+                }
+            });
+        }
+
+        // Network Fetch and Client Assembly Engine 
+        async function loadAndDisplayDocument(title, targetListItem) {
+            // Manage visual menu highlighting
+            document.querySelectorAll("#sidebar li").forEach(item => item.classList.remove("active"));
+            targetListItem.classList.add("active");
+
+            contentDiv.innerHTML = "<p>Fetching document contents...</p>";
+            const targetUrl = markdownFiles[title];
+
+            try {
+                const response = await fetch(targetUrl);
+                if (!response.ok) throw new Error("Could not retrieve source file code formatting definitions.");
+                const rawMarkdown = await response.text();
+
+                // Build HTML Layout node fragments
+                contentDiv.innerHTML = marked.parse(rawMarkdown);
+
+                // Compute rendering routines for math formulas
+                renderMathInElement(contentDiv, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+
+                // Smooth scroll back to topmost viewport frame boundary upon load
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                contentDiv.innerHTML = `<p style="color:red;">Error rendering content: ${error.message}</p>`;
+            }
+        }
+
+        // Initialize execution sequence
+        buildNavigationMenu();
+    </script>
+</body>
+</html>
+
+
+           
