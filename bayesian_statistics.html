@@ -68,10 +68,11 @@
         // Setup Marked.js to interpret ```math code blocks as LaTeX equations
         marked.use({
             renderer: {
-                code(code, info) {
-                    if (info === 'math' || info === 'latex') {
+                code(token) {
+                    // In recent marked.js versions, 'lang' holds the info string and 'text' holds the code
+                    if (token.lang === 'math' || token.lang === 'latex') {
                         // Escape characters so the browser doesn't misinterpret math as HTML tags (like < or >)
-                        const escapedMath = code
+                        const escapedMath = token.text
                             .replace(/&/g, "&amp;")
                             .replace(/</g, "&lt;")
                             .replace(/>/g, "&gt;");
