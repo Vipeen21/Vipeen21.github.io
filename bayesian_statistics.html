@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bayesian Statistics using Python | Vipeen Kumar</title>
     
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS for layout styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Tailwind Typography plugin to format the rendered Markdown -->
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     
+    <!-- Marked.js for parsing Markdown to HTML -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
+    <!-- MathJax for rendering LaTeX math equations -->
     <script>
       MathJax = {
         tex: {
@@ -21,7 +26,7 @@
         }
       };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         body { 
@@ -34,19 +39,25 @@
 </head>
 <body class="m-0 p-0 overflow-hidden text-gray-800 flex flex-col h-screen">
 
+    <!-- Fixed Header -->
     <header class="bg-[#333] text-white p-5 text-xl shadow-md h-[70px] box-border w-full z-50 flex justify-between items-center rounded-b-lg flex-shrink-0">
         <span class="font-bold">Bayesian Statistics using Python</span>
         <a href="index.html" class="text-sm bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded transition">Back to Home</a>
     </header>
 
+    <!-- Main Layout (Sidebar + Content) -->
     <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Navigation -->
         <nav class="w-1/4 min-w-[250px] bg-[#fac47e] p-6 overflow-y-auto scroll-area border-r border-gray-700/20">
             <h2 class="text-xl font-bold mb-4 text-[#7B5E57]">Chapters</h2>
             <ul id="nav-links" class="space-y-2 font-semibold text-sm">
-                </ul>
+                <!-- Navigation links will be injected here by JavaScript -->
+            </ul>
         </nav>
 
+        <!-- Markdown Content Area -->
         <main class="w-3/4 p-10 overflow-y-auto scroll-area bg-white rounded-tl-xl shadow-inner">
+            <!-- The 'prose' class automatically styles the raw HTML output to look like a professional article -->
             <article id="content" class="prose prose-lg max-w-none prose-h1:text-[#7B5E57] prose-a:text-blue-600">
                 <h2 class="animate-pulse text-gray-500">Loading course content...</h2>
             </article>
@@ -54,8 +65,27 @@
     </div>
 
     <script>
+        // Setup Marked.js to interpret ```math code blocks as LaTeX equations
+        marked.use({
+            renderer: {
+                code(code, info) {
+                    if (info === 'math' || info === 'latex') {
+                        // Escape characters so the browser doesn't misinterpret math as HTML tags (like < or >)
+                        const escapedMath = code
+                            .replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;");
+                        
+                        // Wrap the raw code in standard MathJax display blocks \[ ... \] 
+                        return '<div class="my-6 overflow-x-auto">\\[ ' + escapedMath + ' \\]</div>';
+                    }
+                    return false; // Use default marked.js behavior for other code blocks (like Python)
+                }
+            }
+        });
+
         // Base URL for your raw GitHub files
-        const repoBase = "https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/main/";
+        const repoBase = "[https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/main/](https://raw.githubusercontent.com/Vipeen21/bayesian-statistics-python/main/)";
 
         // Array mapping display titles to exact URL-encoded file names in your repository
         const chapters = [
@@ -118,10 +148,17 @@
                 // Convert Markdown to HTML
                 contentDiv.innerHTML = marked.parse(markdown);
 
-                // Command MathJax to render the newly injected LaTeX equations
-                if (window.MathJax) {
-                    MathJax.typesetPromise([contentDiv]).catch((err) => console.log('MathJax error: ', err));
-                }
+                // Command MathJax to render the newly injected LaTeX equations safely
+                const renderMath = () => {
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetClear([contentDiv]);
+                        MathJax.typesetPromise([contentDiv]).catch((err) => console.log('MathJax error: ', err));
+                    } else {
+                        // Retry after a short delay if MathJax hasn't fully initialized
+                        setTimeout(renderMath, 200);
+                    }
+                };
+                renderMath();
 
             } catch (error) {
                 contentDiv.innerHTML = `<h2 class="text-red-600">Error loading content: ${error.message}</h2>`;
