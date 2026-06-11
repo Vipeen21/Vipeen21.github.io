@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vipeen Kumar | Quantitative Researcher & Data Scientist</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        quant: {
+                            900: '#0B1120',
+                            800: '#0F172A',
+                            700: '#1E293B',
+                            accent: '#0EA5E9',
+                            glow: '#38BDF8',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards'
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0B1120;
+            color: #F8FAFC;
+            overflow-x: hidden;
+        }
+        
+        /* Particle Canvas */
+        #network-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.35;
+        }
+
+        /* Glassmorphism utilities */
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.25);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #38BDF8, #818CF8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B1120; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Reveal Animation Class */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-quant-accent selection:text-white">
+
+    <canvas id="network-canvas"></canvas>
+    
+    <!-- Background Glow Blobs -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-cyan-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-indigo-900/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-sky-900/10 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000"></div>
+    </div>
+
+    <nav class="fixed w-full z-50 glass border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-mono font-bold text-xl tracking-tighter">
+                    <span class="text-quant-glow">Vipeen</span><span class="text-white">.Kumar</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6">
+                        <a href="#about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                        <a href="#skills" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Skills</a>
+                        <a href="#projects" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Projects</a>
+                        <a href="#experience" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Experience</a>
+                        <a href="#research" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Research</a>
+                        <a href="#resources" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Resources</a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="https://github.com/Vipeen21" target="_blank" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-github text-xl"></i></a>
+                    <a href="https://www.linkedin.com/in/vipeen-kumar-908212b8/" target="_blank" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-linkedin text-xl"></i></a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu panel -->
+        <div id="mobile-menu" class="md:hidden hidden glass absolute w-full border-t border-white/5">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#skills" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Skills</a>
+                <a href="#projects" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
+                <a href="#experience" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Experience</a>
+                <a href="#research" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Research</a>
+                <a href="#resources" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Resources</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section id="about" class="min-h-[90vh] flex items-center justify-center relative px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <div class="order-2 lg:order-1 space-y-8 animate-fade-in-up">
+                    <div class="space-y-4">
+                        <p class="text-quant-glow font-mono tracking-wide"><i class="fas fa-terminal mr-2"></i>Hello World, I am</p>
+                        <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white">Vipeen <br/> <span class="text-gradient">Kumar</span></h1>
+                        <h2 class="text-2xl md:text-3xl font-medium text-slate-400 mt-2">Quantitative Researcher & Data Scientist</h2>
+                    </div>
+                    
+                    <p class="text-lg text-slate-300 leading-relaxed max-w-2xl">
+                        PhD candidate in Economics specialising in quantitative research and financial modelling. Expert in Python and AI/ML pipelines. Proficient in advanced statistical analysis and visualisation, focusing on developing automated data pipelines and financial trading APIs to drive impactful economic and business strategies.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <a href="#projects" class="px-6 py-3 bg-quant-accent hover:bg-sky-400 text-white font-medium rounded-lg transition-all transform hover:-translate-y-1 shadow-[0_0_20px_rgba(14,165,233,0.4)]">
+                            <i class="fas fa-chart-network mr-2"></i>View Models & Projects
+                        </a>
+                        <a href="Resume_vipeen.pdf" target="_blank" class="px-6 py-3 bg-transparent border border-slate-600 hover:border-slate-400 text-white font-medium rounded-lg transition-all transform hover:-translate-y-1 flex items-center gap-2">
+                            <i class="fas fa-file-pdf text-xl"></i> Download Resume
+                        </a>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-6 pt-6 text-slate-400 text-sm font-mono">
+                        <a href="mailto:vipeenkumar21aug@yahoo.in" class="hover:text-quant-glow transition-colors flex items-center" title="Email"><i class="fas fa-envelope mr-2"></i>vipeenkumar21aug@yahoo.in</a>
+                        <a href="tel:+918427017510" class="hover:text-quant-glow transition-colors flex items-center" title="Phone"><i class="fas fa-phone mr-2"></i>+91 84270 17510</a>
+                        <span class="flex items-center"><i class="fas fa-map-marker-alt mr-2"></i>Chandigarh, India</span>
+                    </div>
+                </div>
+
+                <div class="order-1 lg:order-2 flex justify-center lg:justify-end animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full p-2 bg-gradient-to-tr from-cyan-500 to-indigo-500 shadow-[0_0_40px_rgba(56,189,248,0.3)]">
+                        <div class="w-full h-full rounded-full overflow-hidden border-4 border-quant-900 bg-quant-800">
+                            <!-- Utilizing the exact path to the uploaded image -->
+                            <img src="WhatsApp Image 2025-03-27 at 02.40.35.jpeg" alt="Vipeen Kumar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer" onerror="this.src='https://placehold.co/400x400/1E293B/38BDF8?text=VK'">
+                        </div>
+                        <div class="absolute -bottom-4 -left-4 glass px-4 py-2 rounded-full border border-white/10 flex items-center gap-2 animate-bounce" style="animation-duration: 3s;">
+                            <i class="fab fa-python text-yellow-400 text-xl"></i> <span class="font-mono text-sm font-bold">Python</span>
+                        </div>
+                        <div class="absolute top-10 -right-8 glass px-4 py-2 rounded-full border border-white/10 flex items-center gap-2 animate-bounce" style="animation-duration: 4s; animation-delay: 1s;">
+                            <i class="fas fa-brain text-quant-glow text-xl"></i> <span class="font-mono text-sm font-bold">AI/ML</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 reveal">
+                    <h2 class="text-sm font-mono text-quant-glow tracking-widest uppercase mb-2">// Technical Stack</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Capabilities & Tools</h3>
+                    <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Languages & Tools -->
+                    <div class="glass-card p-6 rounded-xl reveal" style="transition-delay: 0.1s;">
+                        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 mb-6 border border-blue-500/20">
+                            <i class="fas fa-code text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-4">Languages & Tools</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Python (Pandas, NumPy)</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">R (Tidyverse)</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">SQL</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Julia</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Stata</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">LaTeX</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Streamlit</span>
+                        </div>
+                    </div>
+
+                    <!-- Techniques: AI/ML -->
+                    <div class="glass-card p-6 rounded-xl reveal" style="transition-delay: 0.2s;">
+                        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400 mb-6 border border-purple-500/20">
+                            <i class="fas fa-robot text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-4">AI & Machine Learning</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">TensorFlow & PyTorch</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">NLP</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">RAG Pipelines</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Agentic AI & Langchain</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">XGBoost & Scikit-learn</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Predictive Analytics</span>
+                        </div>
+                    </div>
+
+                    <!-- Techniques: Quant & Stats -->
+                    <div class="glass-card p-6 rounded-xl reveal" style="transition-delay: 0.3s;">
+                        <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400 mb-6 border border-emerald-500/20">
+                            <i class="fas fa-chart-line text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-4">Quant & Stats</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Econometrics</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Financial Modelling</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Time Series Forecasting</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Panel Data Analysis</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Geospatial (ArcGIS, QGIS)</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Eng & Cloud -->
+                    <div class="glass-card p-6 rounded-xl reveal" style="transition-delay: 0.4s;">
+                        <div class="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center text-orange-400 mb-6 border border-orange-500/20">
+                            <i class="fas fa-server text-2xl"></i>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mb-4">Cloud & BI</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">AWS & GCP</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Docker & K8s</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Snowflake</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Git / CI/CD</span>
+                            <span class="px-3 py-1 text-sm bg-slate-800 text-slate-300 rounded-full border border-slate-700">Power BI & Tableau</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-20 relative bg-slate-900/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 flex justify-between items-end reveal">
+                    <div>
+                        <h2 class="text-sm font-mono text-quant-glow tracking-widest uppercase mb-2">// System Architecture</h2>
+                        <h3 class="text-3xl md:text-4xl font-bold text-white">Engineering & Data Projects</h3>
+                        <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-transparent mt-4"></div>
+                    </div>
+                    <a href="https://github.com/Vipeen21?tab=repositories" target="_blank" class="hidden md:flex items-center text-slate-400 hover:text-white transition-colors">
+                        View all on GitHub <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Project 1 -->
+                    <div class="glass-card rounded-xl overflow-hidden flex flex-col h-full reveal">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center border-b border-white/10">
+                            <i class="fas fa-network-wired text-6xl text-slate-600 opacity-50 absolute"></i>
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/40 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-white z-10 px-4 text-center">End-to-End AI Pipeline</h4>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h5 class="text-md font-semibold text-quant-glow mb-2">Macro-Agent Forex Volatility Analyst</h5>
+                            <p class="text-slate-400 text-sm mb-4 flex-1">
+                                Engineered an automated pipeline integrating real-time financial data with custom quantitative models. Utilised LangChain and Google Gemini 3 Flash to process and translate complex volatility metrics into professional investor briefings.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Python</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">LangChain</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Gemini API</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Streamlit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="glass-card rounded-xl overflow-hidden flex flex-col h-full reveal" style="transition-delay: 0.1s;">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center border-b border-white/10">
+                            <i class="fas fa-chart-candlestick text-6xl text-slate-600 opacity-50 absolute"></i>
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-900/40 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-white z-10 px-4 text-center">Financial Modelling</h4>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h5 class="text-md font-semibold text-quant-glow mb-2">Algorithmic Trading & Options Pricing</h5>
+                            <p class="text-slate-400 text-sm mb-4 flex-1">
+                                Developed models for Option Greeks, Implied Volatility, and Monte Carlo Simulations (Black-Scholes, Heston, GARCH). Engineered an algorithmic trading pipeline processing deterministic buy/sell signals from historical equity matrices.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">QuantLib</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">SciPy</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Alpaca</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Qfin</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="glass-card rounded-xl overflow-hidden flex flex-col h-full reveal" style="transition-delay: 0.2s;">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center border-b border-white/10">
+                            <i class="fas fa-layer-group text-6xl text-slate-600 opacity-50 absolute"></i>
+                            <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/40 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-white z-10 px-4 text-center">Multi-Asset Analyst</h4>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h5 class="text-md font-semibold text-quant-glow mb-2">Technical Analysis Engine</h5>
+                            <p class="text-slate-400 text-sm mb-4 flex-1">
+                                Architected an engine using OpenBB SDK, automating data ingestion for equities, forex and crypto. Computed complex volatility and momentum metrics (ATR, MACD, RSI, Bollinger Bands) reducing manual intervention by 95%.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">OpenBB</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Pandas</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Plotly</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="glass-card rounded-xl overflow-hidden flex flex-col h-full reveal" style="transition-delay: 0.3s;">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center border-b border-white/10">
+                            <i class="fas fa-search-dollar text-6xl text-slate-600 opacity-50 absolute"></i>
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-900/40 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-white z-10 px-4 text-center">Macro-Sentiment Dashboard</h4>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h5 class="text-md font-semibold text-quant-glow mb-2">NLP RAG Pipeline</h5>
+                            <p class="text-slate-400 text-sm mb-4 flex-1">
+                                End-to-end NLP ingestion pipeline processing macroeconomic documents into hawkish/dovish sentiment scores. Integrated a Retrieval-Augmented Generation (RAG) engine for natural language querying across databases.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Django</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">pgvector</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Celery</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 5 -->
+                    <div class="glass-card rounded-xl overflow-hidden flex flex-col h-full reveal" style="transition-delay: 0.4s;">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center border-b border-white/10">
+                            <i class="fas fa-file-invoice-dollar text-6xl text-slate-600 opacity-50 absolute"></i>
+                            <div class="absolute inset-0 bg-gradient-to-br from-teal-900/40 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-white z-10 px-4 text-center">Automated NSE Filing Analyst</h4>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h5 class="text-md font-semibold text-quant-glow mb-2">Corporate Filing Structurer</h5>
+                            <p class="text-slate-400 text-sm mb-4 flex-1">
+                                Deployed a fully automated stock fundamental analyst app that converts official NSE corporate filings into a structured stock research briefing, significantly reducing manual research workload.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Streamlit</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Pydantic</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Altair</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 6 (Machine Learning general) -->
+                    <div class="glass-card rounded-xl overflow-hidden flex flex-col h-full reveal" style="transition-delay: 0.5s;">
+                        <div class="h-40 bg-slate-800 relative overflow-hidden flex items-center justify-center border-b border-white/10">
+                            <i class="fas fa-brain text-6xl text-slate-600 opacity-50 absolute"></i>
+                            <div class="absolute inset-0 bg-gradient-to-br from-orange-900/40 to-transparent"></div>
+                            <h4 class="text-xl font-bold text-white z-10 px-4 text-center">Machine Learning Architectures</h4>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h5 class="text-md font-semibold text-quant-glow mb-2">Classification & Regression</h5>
+                            <p class="text-slate-400 text-sm mb-4 flex-1">
+                                Developed frameworks predicting credit scores using XGBoost and classifying personal income using KNN & Logistic Regression. Built interactive Decision Trees mapping psychological behavior.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">Scikit-learn</span>
+                                <span class="text-xs font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">XGBoost</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20 relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 text-center reveal">
+                    <h2 class="text-sm font-mono text-quant-glow tracking-widest uppercase mb-2">// Career Path</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Professional Experience</h3>
+                    <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-transparent mx-auto mt-4"></div>
+                </div>
+
+                <div class="relative border-l border-slate-700 ml-3 md:ml-0 md:pl-0 space-y-12">
+                    
+                    <!-- Exp 1 -->
+                    <div class="relative pl-8 md:pl-12 reveal">
+                        <div class="absolute w-4 h-4 bg-quant-glow rounded-full -left-[8.5px] top-1 ring-4 ring-quant-900 shadow-[0_0_10px_rgba(56,189,248,0.8)]"></div>
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                            <h4 class="text-2xl font-bold text-white">Senior Researcher</h4>
+                            <span class="text-quant-glow font-mono text-sm">Jan 2021 – Jan 2026</span>
+                        </div>
+                        <h5 class="text-lg text-slate-400 mb-4 font-medium"><i class="fas fa-university mr-2"></i>Panjab University, Chandigarh</h5>
+                        <ul class="list-disc list-outside ml-4 space-y-2 text-slate-300">
+                            <li>Derived actionable insights by developing econometric and financial models along with data science techniques.</li>
+                            <li>Utilised Generative AI for academic research projects involving primary and secondary research, data analysis and paper presentations.</li>
+                            <li>Delivered 5+ hours of weekly lectures to UG/PG students. Organised national & international conferences and webinars focused on AI and Econometrics.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Exp 2 -->
+                    <div class="relative pl-8 md:pl-12 reveal">
+                        <div class="absolute w-4 h-4 bg-slate-600 rounded-full -left-[8.5px] top-1 ring-4 ring-quant-900 transition-colors duration-300 hover:bg-quant-glow"></div>
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                            <h4 class="text-2xl font-bold text-white">Senior Associate</h4>
+                            <span class="text-slate-400 font-mono text-sm">Dec 2020 – Dec 2021</span>
+                        </div>
+                        <h5 class="text-lg text-slate-400 mb-4 font-medium"><i class="fas fa-building mr-2"></i>Indiamart Intermesh Ltd., Chandigarh</h5>
+                        <ul class="list-disc list-outside ml-4 space-y-2 text-slate-300">
+                            <li>Boosted lead-to-customer conversion rate by 5% and reduced supplier churn by 15% by fine-tuning matchmaking algorithms.</li>
+                            <li>Validated user behaviour to optimise category processes.</li>
+                            <li>Worked closely with stakeholders articulating and presenting recommendations, influencing future plans based on insights.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Exp 3 -->
+                    <div class="relative pl-8 md:pl-12 reveal">
+                        <div class="absolute w-4 h-4 bg-slate-600 rounded-full -left-[8.5px] top-1 ring-4 ring-quant-900 transition-colors duration-300 hover:bg-quant-glow"></div>
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-2">
+                            <h4 class="text-2xl font-bold text-white">Associate</h4>
+                            <span class="text-slate-400 font-mono text-sm">Aug 2019 – Sept 2020</span>
+                        </div>
+                        <h5 class="text-lg text-slate-400 mb-4 font-medium"><i class="fas fa-database mr-2"></i>Innodata India Pvt. Ltd., Chandigarh</h5>
+                        <ul class="list-disc list-outside ml-4 space-y-2 text-slate-300">
+                            <li>Annotated and classified text and image datasets to improve machine learning model accuracy.</li>
+                            <li>Performed regular quality audits and updates, adhering to strict data compliance and accuracy standards.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="research" class="py-20 relative bg-slate-900/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 text-center reveal">
+                    <h2 class="text-sm font-mono text-quant-glow tracking-widest uppercase mb-2">// Academia</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Research & Publications</h3>
+                    <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-transparent mx-auto mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Primary Research -->
+                    <div class="glass-card p-8 rounded-xl reveal">
+                        <h4 class="text-xl font-bold text-white mb-6 flex items-center"><i class="fas fa-search-location mr-3 text-quant-glow"></i> Primary Research</h4>
+                        <div class="space-y-6">
+                            <div class="border-l-2 border-slate-700 pl-4">
+                                <h5 class="text-white font-medium">ASER Survey (Pratham Education Foundation)</h5>
+                                <p class="text-sm text-slate-400 mt-1">Conducted extensive field research assessing rural educational outcomes and generating localized statistical data.</p>
+                            </div>
+                            <div class="border-l-2 border-slate-700 pl-4">
+                                <h5 class="text-white font-medium">Natural Farming & Crop Diversification</h5>
+                                <p class="text-sm text-slate-400 mt-1">Conducted primary research in the Baddi district of Himachal Pradesh assessing social capital and agricultural shifts.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Paper Presentations -->
+                    <div class="glass-card p-8 rounded-xl reveal" style="transition-delay: 0.2s;">
+                        <h4 class="text-xl font-bold text-white mb-6 flex items-center"><i class="fas fa-scroll mr-3 text-quant-glow"></i> Paper Presentations</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-angle-right text-cyan-400 mt-1 mr-3"></i>
+                                <div>
+                                    <h5 class="text-white font-medium text-sm leading-tight">"Impact of Exchange Rate Volatility and Capital Formation in India since Liberalisation"</h5>
+                                    <p class="text-xs text-slate-500 font-mono mt-1">National Seminar, ICSSR NWRC</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-angle-right text-cyan-400 mt-1 mr-3"></i>
+                                <div>
+                                    <h5 class="text-white font-medium text-sm leading-tight">"Comparative Analysis of Crowding Out Effect: Punjab vs. Haryana"</h5>
+                                    <p class="text-xs text-slate-500 font-mono mt-1">International Conference, UBS Panjab University</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-angle-right text-cyan-400 mt-1 mr-3"></i>
+                                <div>
+                                    <h5 class="text-white font-medium text-sm leading-tight">"Impact of Energy Transition on Automobile and Steel Industry in India"</h5>
+                                    <p class="text-xs text-slate-500 font-mono mt-1">National Seminar, Panjab University</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-20 relative">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 reveal text-center">
+                    <h2 class="text-sm font-mono text-quant-glow tracking-widest uppercase mb-2">// Credentials</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Education & Certifications</h3>
+                    <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-transparent mt-4 mx-auto"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- Education List -->
+                    <div class="space-y-6 reveal">
+                        <div class="glass-card p-6 rounded-lg border-l-4 border-quant-glow shadow-[0_0_15px_rgba(56,189,248,0.15)]">
+                            <h4 class="text-xl font-bold text-white">PhD in Economics</h4>
+                            <p class="text-quant-glow text-sm font-mono mb-2">In Progress | Panjab University, Chandigarh</p>
+                            <p class="text-slate-400 text-sm">Specializing in Exchange Rate Volatility through quantitative and econometric frameworks.</p>
+                        </div>
+                        <div class="glass-card p-6 rounded-lg border-l-4 border-slate-700">
+                            <h4 class="text-xl font-bold text-white">MA in Economics</h4>
+                            <p class="text-slate-400 text-sm font-mono mb-2">Aug 2017 - Jul 2019 | Panjab University, Chandigarh</p>
+                            <p class="text-slate-400 text-sm">Specialization in Econometrics and Quantitative Methods.</p>
+                        </div>
+                        <div class="glass-card p-6 rounded-lg border-l-4 border-slate-700">
+                            <h4 class="text-xl font-bold text-white">B.A. (Hons.)</h4>
+                            <p class="text-slate-400 text-sm font-mono mb-2">Aug 2014 - Jul 2017 | Panjab University, Chandigarh</p>
+                            <p class="text-slate-400 text-sm">Economics, Mathematics, and Statistics.</p>
+                        </div>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div class="space-y-5 reveal" style="transition-delay: 0.2s;">
+                        <div class="flex items-start glass p-4 rounded-lg">
+                            <i class="fas fa-award text-2xl text-yellow-500 mt-1 mr-4"></i>
+                            <div>
+                                <p class="text-white font-bold">UGC-NET JRF/SRF</p>
+                                <p class="text-slate-400 text-sm">Awarded by Ministry of Education, India, for research in economics.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start glass p-4 rounded-lg">
+                            <i class="fas fa-chart-pie text-2xl text-emerald-500 mt-1 mr-4"></i>
+                            <div>
+                                <p class="text-white font-bold">Business Economics (CB2)</p>
+                                <p class="text-slate-400 text-sm">Institute of Actuaries of India.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start glass p-4 rounded-lg">
+                            <i class="fas fa-laptop-code text-2xl text-blue-500 mt-1 mr-4"></i>
+                            <div>
+                                <p class="text-white font-bold">Data Science & ML</p>
+                                <p class="text-slate-400 text-sm">Python-Powered ML, R Programming & Excel with AI and NLP (Panjab Univ & Kurukshetra Univ).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start glass p-4 rounded-lg">
+                            <i class="fas fa-chart-line text-2xl text-purple-500 mt-1 mr-4"></i>
+                            <div>
+                                <p class="text-white font-bold">Data Analysis</p>
+                                <p class="text-slate-400 text-sm">Applied Econometrics, SPSS, Adv. Panel Data Techniques, Data Analysis in Public Policy (CPPR).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start glass p-4 rounded-lg">
+                            <i class="fas fa-money-bill-trend-up text-2xl text-green-500 mt-1 mr-4"></i>
+                            <div>
+                                <p class="text-white font-bold">Finance</p>
+                                <p class="text-slate-400 text-sm">SEBI-Investor Certification & NISM Management Development Programme in Derivative Strategies.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources" class="py-20 relative bg-slate-900/50 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 text-center reveal">
+                    <h2 class="text-sm font-mono text-quant-glow tracking-widest uppercase mb-2">// Artifacts</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Interactive Learning & Apps</h3>
+                    <p class="text-slate-400 mt-4 max-w-2xl mx-auto">Access my hosted academic courses, live data applications, and study materials below.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <a href="bayesian_statistics.html" class="glass-card p-8 rounded-xl block group reveal cursor-pointer">
+                        <i class="fas fa-book-open text-4xl text-slate-400 group-hover:text-cyan-400 transition-colors mb-4"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Bayesian Statistics Course</h4>
+                        <p class="text-sm text-slate-400">Comprehensive interactive course material built with Python and Markdown.</p>
+                    </a>
+                    
+                    <a href="https://github.com/Vipeen21?tab=repositories" target="_blank" class="glass-card p-8 rounded-xl block group reveal cursor-pointer" style="transition-delay: 0.1s;">
+                        <i class="fas fa-layer-group text-4xl text-slate-400 group-hover:text-purple-400 transition-colors mb-4"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Streamlit ML Apps</h4>
+                        <p class="text-sm text-slate-400">Deployed quantitative tools, AI-enabled Interviewer, and Plagiarism checkers.</p>
+                    </a>
+                    
+                    <a href="https://github.com/Vipeen21" target="_blank" class="glass-card p-8 rounded-xl block group reveal cursor-pointer" style="transition-delay: 0.2s;">
+                        <i class="fas fa-file-code text-4xl text-slate-400 group-hover:text-emerald-400 transition-colors mb-4"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Code Repository</h4>
+                        <p class="text-sm text-slate-400">Geospatial analysis, NLP scripts, and algorithmic trading frameworks.</p>
+                    </a>
+                </div>
+
+                <div class="mt-20 mb-12 text-center reveal">
+                    <h2 class="text-sm font-mono text-quant-glow tracking-widest uppercase mb-2">// Downloads</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Study Materials & ML Courses</h3>
+                    <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-transparent mx-auto mt-4"></div>
+                    <p class="text-slate-400 mt-4 max-w-2xl mx-auto">Downloadable notes, lecture materials, and comprehensive courses on Machine Learning, Econometrics, and Quantitative Finance.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Material 1: Machine Learning -->
+                    <a href="#" class="glass-card p-6 rounded-xl flex flex-col items-center text-center group reveal hover:border-cyan-400/50 transition-all">
+                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-file-pdf text-2xl text-red-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Machine Learning</h4>
+                        <p class="text-xs text-slate-400 mb-4 flex-1">Comprehensive ML course notes, from data preprocessing to XGBoost.</p>
+                        <span class="text-xs font-mono text-cyan-400 border border-cyan-400/30 px-3 py-1 rounded-full group-hover:bg-cyan-400/10">Download PDF</span>
+                    </a>
+                    
+                    <!-- Material 2: NLP & GenAI -->
+                    <a href="#" class="glass-card p-6 rounded-xl flex flex-col items-center text-center group reveal hover:border-cyan-400/50 transition-all" style="transition-delay: 0.1s;">
+                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-file-pdf text-2xl text-purple-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">NLP & GenAI</h4>
+                        <p class="text-xs text-slate-400 mb-4 flex-1">Guides on building RAG pipelines, Langchain, and LLM integrations.</p>
+                        <span class="text-xs font-mono text-cyan-400 border border-cyan-400/30 px-3 py-1 rounded-full group-hover:bg-cyan-400/10">Download PDF</span>
+                    </a>
+
+                    <!-- Material 3: Applied Econometrics -->
+                    <a href="#" class="glass-card p-6 rounded-xl flex flex-col items-center text-center group reveal hover:border-cyan-400/50 transition-all" style="transition-delay: 0.2s;">
+                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-file-archive text-2xl text-yellow-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Applied Econometrics</h4>
+                        <p class="text-xs text-slate-400 mb-4 flex-1">Datasets, Statistical modeling files, and panel data analysis techniques.</p>
+                        <span class="text-xs font-mono text-cyan-400 border border-cyan-400/30 px-3 py-1 rounded-full group-hover:bg-cyan-400/10">Download ZIP</span>
+                    </a>
+
+                    <!-- Material 4: Quant Finance -->
+                    <a href="#" class="glass-card p-6 rounded-xl flex flex-col items-center text-center group reveal hover:border-cyan-400/50 transition-all" style="transition-delay: 0.3s;">
+                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-book text-2xl text-blue-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Quantitative Finance</h4>
+                        <p class="text-xs text-slate-400 mb-4 flex-1">Options pricing, Black-Scholes, and algorithmic trading tutorials.</p>
+                        <span class="text-xs font-mono text-cyan-400 border border-cyan-400/30 px-3 py-1 rounded-full group-hover:bg-cyan-400/10">Download PDF</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    <footer class="glass border-t border-white/5 pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="font-mono font-bold text-xl tracking-tighter"><span class="text-quant-glow">Vipeen</span><span class="text-slate-400">.Kumar</span></span>
+                <p class="text-sm text-slate-500 mt-2">Quantitative Researcher & Data Scientist</p>
+                <p class="text-sm text-slate-500 mt-1"><i class="fas fa-phone mr-1"></i> +91 84270 17510</p>
+            </div>
+            
+            <div class="flex space-x-6">
+                <a href="mailto:vipeenkumar21aug@yahoo.in" class="text-slate-400 hover:text-white transition-colors"><i class="fas fa-envelope text-2xl"></i></a>
+                <a href="https://github.com/Vipeen21" target="_blank" class="text-slate-400 hover:text-white transition-colors"><i class="fab fa-github text-2xl"></i></a>
+                <a href="https://www.linkedin.com/in/vipeen-kumar-908212b8/" target="_blank" class="text-slate-400 hover:text-white transition-colors"><i class="fab fa-linkedin text-2xl"></i></a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-500 font-mono">
+            &copy; 2026 Vipeen Kumar. Engineered for Data & Scale.
+        </div>
+    </footer>
+
+    <script>
+        // 1. Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // 2. Scroll Reveal Animation using Intersection Observer
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); // trigger once on load
+
+        // 3. Network Background Canvas Animation (Elegant Quant Aesthetic)
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Particles
+        let particlesArray = [];
+        const numParticles = window.innerWidth > 768 ? 80 : 40; // Responsive count
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = (Math.random() - 0.5) * 0.4; // Very slow movement
+                this.speedY = (Math.random() - 0.5) * 0.4;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                // Bounce off edges
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.4)'; // Cyan colored nodes
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        function initParticles() {
+            particlesArray = [];
+            for (let i = 0; i < numParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+        initParticles();
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                
+                // Draw connecting lines if distance is small enough
+                for (let j = i; j < particlesArray.length; j++) {
+                    const dx = particlesArray[i].x - particlesArray[j].x;
+                    const dy = particlesArray[i].y - particlesArray[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 140) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${0.12 - distance/1200})`; // Fade line out
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        
+        // Start animation after window loads
+        window.onload = function() {
+            animate();
+        };
+    </script>
+</body>
+</html>
